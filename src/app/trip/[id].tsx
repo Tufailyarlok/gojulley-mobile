@@ -1,8 +1,9 @@
 import { useEffect, useState } from 'react'
-import { ActivityIndicator, Image, Pressable, ScrollView, StyleSheet, Text, TextInput, View } from 'react-native'
+import { ActivityIndicator, Image, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native'
 import { useLocalSearchParams, useRouter } from 'expo-router'
 import { createTripBooking, createTripPaymentOrder, getTrip, verifyTripPayment } from '../../lib/api'
 import { useAuth } from '../../lib/auth'
+import DateField from '../../components/DateField'
 import { inr, todayISO } from '../../lib/money'
 import { payOrder } from '../../lib/pay'
 import { tripPhoto } from '../../lib/photos'
@@ -45,7 +46,7 @@ export default function TripDetail() {
       return
     }
     if (!ISO.test(startDate) || startDate < todayISO()) {
-      setError('Enter a start date (YYYY-MM-DD) that isn’t in the past.')
+      setError('Please pick a start date that isn’t in the past.')
       return
     }
     setError(null)
@@ -121,14 +122,7 @@ export default function TripDetail() {
       <View style={styles.card}>
         <Text style={styles.cardTitle}>Book this trip</Text>
         <Text style={styles.label}>Start date</Text>
-        <TextInput
-          value={startDate}
-          onChangeText={setStartDate}
-          placeholder="YYYY-MM-DD"
-          placeholderTextColor={colors.faint}
-          autoCapitalize="none"
-          style={styles.input}
-        />
+        <DateField value={startDate} onChange={setStartDate} min={todayISO()} placeholder="Pick a start date" />
         <Text style={[styles.label, { marginTop: sp(3) }]}>Travellers</Text>
         <View style={styles.stepper}>
           <Pressable onPress={() => setTravelers(Math.max(1, travelers - 1))} style={styles.stepBtn}><Text style={styles.stepTxt}>−</Text></Pressable>

@@ -1,8 +1,10 @@
 import type {
   AuthUser,
   Booking,
+  CouponPreview,
   Listing,
   PaymentOrder,
+  PublicCoupon,
   ReviewSummary,
   SignupResponse,
   TripBooking,
@@ -93,6 +95,22 @@ export async function getTrip(id: number): Promise<TripPackage> {
 }
 export async function getReviewSummaries(): Promise<ReviewSummary[]> {
   return handle<ReviewSummary[]>(await fetch(`${BASE}/reviews/summary`))
+}
+
+// --- Coupons (auth) ---
+// Offers to show in the checkout picker.
+export async function getCoupons(token: string): Promise<PublicCoupon[]> {
+  return handle<PublicCoupon[]>(await fetch(`${BASE}/coupons`, { headers: authHeaders(token) }))
+}
+// Preview what a code saves on an amount (₹) — drives the live discounted total.
+export async function previewCoupon(token: string, code: string, amount: number): Promise<CouponPreview> {
+  return handle<CouponPreview>(
+    await fetch(`${BASE}/coupons/preview`, {
+      method: 'POST',
+      headers: authHeaders(token),
+      body: JSON.stringify({ code, amount }),
+    }),
+  )
 }
 
 // --- Bookings (auth) ---

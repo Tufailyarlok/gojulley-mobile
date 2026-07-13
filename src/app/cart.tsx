@@ -1,9 +1,11 @@
 import { useState } from 'react'
-import { Pressable, ScrollView, StyleSheet, Text, TextInput, View } from 'react-native'
+import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native'
 import { useRouter } from 'expo-router'
+import { SymbolView } from 'expo-symbols'
 import { cartCheckout, createTripPaymentOrder, verifyTripPayment } from '../lib/api'
 import { useAuth } from '../lib/auth'
 import { useCart } from '../lib/cart'
+import DateField from '../components/DateField'
 import { inr, todayISO } from '../lib/money'
 import { payOrder } from '../lib/pay'
 import { colors, radius, sp, TYPE_META } from '../lib/theme'
@@ -33,7 +35,7 @@ export default function Cart() {
       return
     }
     if (!ISO.test(startDate) || startDate < todayISO()) {
-      setError('Enter a start date (YYYY-MM-DD) that isn’t in the past.')
+      setError('Please pick a start date that isn’t in the past.')
       return
     }
     setError(null)
@@ -70,9 +72,15 @@ export default function Cart() {
 
   if (items.length === 0) {
     return (
-      <View style={{ padding: sp(6), alignItems: 'center' }}>
-        <Text style={{ color: colors.faint, marginBottom: sp(4) }}>Your cart is empty.</Text>
-        <Pressable style={styles.primary} onPress={() => router.push('/search')}>
+      <View style={styles.emptyWrap}>
+        <View style={styles.emptyIcon}>
+          <SymbolView name="cart" size={40} tintColor={colors.navy} fallback={<Text style={{ fontSize: 36 }}>🛒</Text>} />
+        </View>
+        <Text style={styles.emptyTitle}>Your cart is empty</Text>
+        <Text style={styles.emptyBody}>
+          Add stays, rides and services as you browse — then book them together in one trip.
+        </Text>
+        <Pressable style={[styles.primary, styles.emptyBtn]} onPress={() => router.push('/search')}>
           <Text style={styles.primaryText}>Browse stays, rides &amp; services</Text>
         </Pressable>
       </View>
@@ -104,14 +112,7 @@ export default function Cart() {
 
       <View style={styles.card}>
         <Text style={styles.label}>Trip start date</Text>
-        <TextInput
-          value={startDate}
-          onChangeText={setStartDate}
-          placeholder="YYYY-MM-DD"
-          placeholderTextColor={colors.faint}
-          autoCapitalize="none"
-          style={styles.input}
-        />
+        <DateField value={startDate} onChange={setStartDate} min={todayISO()} placeholder="Pick a start date" />
         <Text style={[styles.label, { marginTop: sp(3) }]}>Number of days</Text>
         <View style={styles.stepper}>
           <Pressable onPress={() => setDays(Math.max(1, days - 1))} style={styles.stepBtn}><Text style={styles.stepTxt}>−</Text></Pressable>
@@ -170,4 +171,13 @@ const styles = StyleSheet.create({
   primaryText: { color: '#fff', fontWeight: '800', fontSize: 15 },
   success: { backgroundColor: '#ecfdf5', borderRadius: radius.md, padding: sp(4), marginBottom: sp(4) },
   error: { color: colors.danger, marginTop: sp(2) },
+
+  emptyWrap: { flex: 1, alignItems: 'center', justifyContent: 'center', padding: sp(6) },
+  emptyIcon: {
+    width: 88, height: 88, borderRadius: 44, backgroundColor: colors.lavender,
+    alignItems: 'center', justifyContent: 'center', marginBottom: sp(5),
+  },
+  emptyTitle: { color: colors.ink, fontWeight: '900', fontSize: 20, marginBottom: sp(2) },
+  emptyBody: { color: colors.muted, fontSize: 14, textAlign: 'center', lineHeight: 20, marginBottom: sp(6), maxWidth: 300 },
+  emptyBtn: { marginTop: 0, paddingHorizontal: sp(6), alignSelf: 'stretch' },
 })

@@ -77,6 +77,21 @@ export interface PaymentOrder {
   couponCode: string | null
 }
 
+// Offers shown in the checkout coupon picker (public-safe fields only).
+export interface PublicCoupon {
+  code: string
+  description: string
+  firstBookingOnly: boolean
+}
+
+// Live preview of what a coupon saves on a given amount (amount + discount in ₹).
+export interface CouponPreview {
+  code: string
+  discount: number
+  finalAmount: number
+  message: string
+}
+
 export interface AuthUser {
   token: string
   email: string
