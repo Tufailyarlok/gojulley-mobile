@@ -37,7 +37,7 @@ export default function Search() {
 
   return (
     <View style={{ flex: 1 }}>
-      <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={{ padding: sp(3), gap: sp(2) }} style={{ flexGrow: 0 }}>
+      <View style={styles.tabs}>
         {CATS.map((c) => {
           const sel = tab === c.key
           return (
@@ -46,7 +46,7 @@ export default function Search() {
             </Pressable>
           )
         })}
-      </ScrollView>
+      </View>
 
       {loading && <ActivityIndicator color={colors.navy} style={{ marginTop: sp(8) }} />}
       {error && <Text style={styles.error}>Couldn’t load: {error}</Text>}
@@ -88,9 +88,10 @@ export default function Search() {
 }
 
 const styles = StyleSheet.create({
-  pill: { borderWidth: 1, borderColor: colors.line, borderRadius: radius.pill, paddingHorizontal: sp(4), paddingVertical: sp(2), backgroundColor: '#fff' },
+  tabs: { flexDirection: 'row', flexWrap: 'wrap', gap: sp(2), paddingHorizontal: sp(4), paddingVertical: sp(3) },
+  pill: { borderWidth: 1, borderColor: colors.line, borderRadius: radius.pill, paddingHorizontal: sp(4), paddingVertical: sp(2), backgroundColor: '#fff', alignItems: 'center', justifyContent: 'center' },
   pillActive: { backgroundColor: colors.navy, borderColor: colors.navy },
-  pillText: { color: colors.muted, fontWeight: '700' },
+  pillText: { color: colors.muted, fontWeight: '700', fontSize: 14, lineHeight: 20 },
   pillTextActive: { color: '#fff' },
   card: { backgroundColor: '#fff', borderWidth: 1, borderColor: colors.line, borderRadius: radius.lg, overflow: 'hidden' },
   cardImg: { width: '100%', height: 150, backgroundColor: colors.surface },
