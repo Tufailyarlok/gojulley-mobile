@@ -1,12 +1,12 @@
 import { useEffect, useState } from 'react'
 import { ActivityIndicator, Pressable, ScrollView, StyleSheet, Text, TextInput, View } from 'react-native'
 import { useLocalSearchParams, useRouter } from 'expo-router'
-import { createTripBooking, createTripPaymentOrder, getTrip, verifyTripPayment } from '../../src/lib/api'
-import { useAuth } from '../../src/lib/auth'
-import { inr, todayISO } from '../../src/lib/money'
-import { payOrder } from '../../src/lib/pay'
-import { colors, radius, sp } from '../../src/lib/theme'
-import type { TripPackage } from '../../src/lib/types'
+import { createTripBooking, createTripPaymentOrder, getTrip, verifyTripPayment } from '../../lib/api'
+import { useAuth } from '../../lib/auth'
+import { inr, todayISO } from '../../lib/money'
+import { payOrder } from '../../lib/pay'
+import { colors, radius, sp } from '../../lib/theme'
+import type { TripPackage } from '../../lib/types'
 
 const ISO = /^\d{4}-\d{2}-\d{2}$/
 

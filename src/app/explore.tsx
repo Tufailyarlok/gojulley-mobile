@@ -2,7 +2,7 @@ import { Fragment } from 'react'
 import { Dimensions, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native'
 import { useRouter } from 'expo-router'
 import Svg, { Circle, Defs, Line, LinearGradient, Polygon, Rect, Stop, Text as SvgText } from 'react-native-svg'
-import { colors, radius, sp } from '../src/lib/theme'
+import { colors, radius, sp } from '../lib/theme'
 
 type PlaceKey = 'leh' | 'nubra' | 'turtuk' | 'pangong' | 'zanskar'
 

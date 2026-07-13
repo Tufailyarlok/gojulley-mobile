@@ -1,9 +1,9 @@
 import { useState, type ComponentProps } from 'react'
 import { Pressable, ScrollView, StyleSheet, Text, TextInput, View } from 'react-native'
 import { useRouter } from 'expo-router'
-import { login, resendOtp, signup, verifyOtp } from '../src/lib/api'
-import { useAuth } from '../src/lib/auth'
-import { colors, radius, sp } from '../src/lib/theme'
+import { login, resendOtp, signup, verifyOtp } from '../lib/api'
+import { useAuth } from '../lib/auth'
+import { colors, radius, sp } from '../lib/theme'
 
 type Mode = 'login' | 'signup' | 'verify'
 

@@ -2,9 +2,9 @@ import { Stack, useRouter } from 'expo-router'
 import { Pressable, Text } from 'react-native'
 import { SafeAreaProvider } from 'react-native-safe-area-context'
 import { StatusBar } from 'expo-status-bar'
-import { AuthProvider } from '../src/lib/auth'
-import { CartProvider, useCart } from '../src/lib/cart'
-import { colors } from '../src/lib/theme'
+import { AuthProvider } from '../lib/auth'
+import { CartProvider, useCart } from '../lib/cart'
+import { colors } from '../lib/theme'
 
 function CartButton() {
   const { count } = useCart()

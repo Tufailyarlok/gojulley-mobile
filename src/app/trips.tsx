@@ -1,10 +1,10 @@
 import { useEffect, useState } from 'react'
 import { ActivityIndicator, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native'
 import { useRouter } from 'expo-router'
-import { getTrips } from '../src/lib/api'
-import { inr } from '../src/lib/money'
-import { colors, radius, sp } from '../src/lib/theme'
-import type { TripPackage } from '../src/lib/types'
+import { getTrips } from '../lib/api'
+import { inr } from '../lib/money'
+import { colors, radius, sp } from '../lib/theme'
+import type { TripPackage } from '../lib/types'
 
 export default function Trips() {
   const router = useRouter()

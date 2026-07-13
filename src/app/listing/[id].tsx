@@ -1,11 +1,11 @@
 import { useEffect, useState } from 'react'
 import { ActivityIndicator, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native'
 import { useLocalSearchParams, useRouter } from 'expo-router'
-import { getListing } from '../../src/lib/api'
-import { useCart } from '../../src/lib/cart'
-import { inr } from '../../src/lib/money'
-import { colors, radius, sp, TYPE_META } from '../../src/lib/theme'
-import type { Listing } from '../../src/lib/types'
+import { getListing } from '../../lib/api'
+import { useCart } from '../../lib/cart'
+import { inr } from '../../lib/money'
+import { colors, radius, sp, TYPE_META } from '../../lib/theme'
+import type { Listing } from '../../lib/types'
 
 const DETAILS: Record<string, string[]> = {
   HOTEL: ['Check-in 10:00 AM · check-out next-day 10:00 AM', 'Daily breakfast included', 'Rate is per room, per night'],

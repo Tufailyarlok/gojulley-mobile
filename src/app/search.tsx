@@ -1,11 +1,11 @@
 import { useEffect, useMemo, useState } from 'react'
 import { ActivityIndicator, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native'
 import { useRouter } from 'expo-router'
-import { getListings } from '../src/lib/api'
-import { useCart } from '../src/lib/cart'
-import { inr } from '../src/lib/money'
-import { colors, radius, sp, TYPE_META } from '../src/lib/theme'
-import type { Listing } from '../src/lib/types'
+import { getListings } from '../lib/api'
+import { useCart } from '../lib/cart'
+import { inr } from '../lib/money'
+import { colors, radius, sp, TYPE_META } from '../lib/theme'
+import type { Listing } from '../lib/types'
 
 const CATS = [
   { key: 'stays', label: 'Stays', match: (l: Listing) => l.type === 'HOTEL' || l.type === 'HOMESTAY' },

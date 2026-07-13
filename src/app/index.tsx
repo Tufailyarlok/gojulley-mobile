@@ -1,6 +1,6 @@
 import { ScrollView, Text, View, Pressable, StyleSheet } from 'react-native'
 import { useRouter } from 'expo-router'
-import { colors, radius, sp } from '../src/lib/theme'
+import { colors, radius, sp } from '../lib/theme'
 
 export default function Home() {
   const router = useRouter()

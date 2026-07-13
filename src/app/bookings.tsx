@@ -10,12 +10,12 @@ import {
   getMyTrips,
   verifyPayment,
   verifyTripPayment,
-} from '../src/lib/api'
-import { useAuth } from '../src/lib/auth'
-import { inr } from '../src/lib/money'
-import { payOrder } from '../src/lib/pay'
-import { colors, radius, sp } from '../src/lib/theme'
-import type { Booking, BookingStatus, TripBooking } from '../src/lib/types'
+} from '../lib/api'
+import { useAuth } from '../lib/auth'
+import { inr } from '../lib/money'
+import { payOrder } from '../lib/pay'
+import { colors, radius, sp } from '../lib/theme'
+import type { Booking, BookingStatus, TripBooking } from '../lib/types'
 
 const badgeColor: Record<BookingStatus, string> = {
   PENDING: colors.amber,

@@ -4,36 +4,37 @@
     "slug": "gojulley-mobile",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/icon.png",
+    "icon": "./assets/images/icon.png",
     "scheme": "gojulley",
     "userInterfaceStyle": "light",
-    "newArchEnabled": true,
-    "splash": {
-      "image": "./assets/splash-icon.png",
-      "resizeMode": "contain",
-      "backgroundColor": "#28328c"
-    },
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.gojulley.app"
     },
     "android": {
       "package": "com.gojulley.app",
+      "edgeToEdgeEnabled": true,
       "adaptiveIcon": {
-        "foregroundImage": "./assets/adaptive-icon.png",
+        "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#28328c"
       }
     },
     "web": {
-      "bundler": "metro",
       "output": "single",
-      "favicon": "./assets/favicon.png"
+      "favicon": "./assets/images/favicon.png"
     },
     "plugins": [
       "expo-router",
+      [
+        "expo-splash-screen",
+        {
+          "backgroundColor": "#28328c",
+          "image": "./assets/images/splash-icon.png",
+          "imageWidth": 120
+        }
+      ],
       "expo-secure-store",
-      "expo-asset",
-      "expo-font"
+      "expo-status-bar"
     ],
     "experiments": {
       "typedRoutes": true

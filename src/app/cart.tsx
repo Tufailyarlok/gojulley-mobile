@@ -1,12 +1,12 @@
 import { useState } from 'react'
 import { Pressable, ScrollView, StyleSheet, Text, TextInput, View } from 'react-native'
 import { useRouter } from 'expo-router'
-import { cartCheckout, createTripPaymentOrder, verifyTripPayment } from '../src/lib/api'
-import { useAuth } from '../src/lib/auth'
-import { useCart } from '../src/lib/cart'
-import { inr, todayISO } from '../src/lib/money'
-import { payOrder } from '../src/lib/pay'
-import { colors, radius, sp, TYPE_META } from '../src/lib/theme'
+import { cartCheckout, createTripPaymentOrder, verifyTripPayment } from '../lib/api'
+import { useAuth } from '../lib/auth'
+import { useCart } from '../lib/cart'
+import { inr, todayISO } from '../lib/money'
+import { payOrder } from '../lib/pay'
+import { colors, radius, sp, TYPE_META } from '../lib/theme'
 
 const ISO = /^\d{4}-\d{2}-\d{2}$/
 
