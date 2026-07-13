@@ -1,7 +1,7 @@
 # GoJulley — Mobile (Expo / React Native)
 
 The native app for **GoJulley**, the Ladakh trip-booking platform. It talks to the
-**same backend** as the web app (`https://gojulley-backend.onrender.com`) — a mobile
+**same backend** as the web app (`https://api.gojulley.com`) — a mobile
 app is just another client of the stateless JWT REST API, so there are **no backend changes**.
 
 Built on **Expo SDK 54** (Expo Router). Routes live in `src/app/`, shared logic in `src/lib/`.
