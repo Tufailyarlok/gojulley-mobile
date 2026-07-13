@@ -13,7 +13,7 @@ import type {
 
 // The backend is the same one the web app uses — a mobile app is just another
 // client. Override for local dev by pointing at your machine's LAN IP.
-export const BASE = 'https://gojulley-backend.onrender.com/api/v1'
+export const BASE = 'https://api.gojulley.com/api/v1'
 
 function authHeaders(token: string) {
   return { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` }
