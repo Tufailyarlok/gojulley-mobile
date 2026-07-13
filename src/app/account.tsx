@@ -7,8 +7,7 @@ import { useAuth } from '../lib/auth'
 import { colors, radius, sp } from '../lib/theme'
 
 // Public site hosting the legal/support pages (same content as the web app).
-// TODO: switch to https://gojulley.com once the domain's DNS is pointed.
-const SITE = 'https://gojulley-frontend.onrender.com'
+const SITE = 'https://gojulley.com'
 const openPage = (path: string) => WebBrowser.openBrowserAsync(SITE + path)
 
 // Legal & support links — must be reachable in-app for store review (privacy
