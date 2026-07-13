@@ -1,19 +1,35 @@
 import type { PaymentOrder } from './types'
 
-type Verify = (r: { razorpayOrderId: string; razorpayPaymentId: string; razorpaySignature: string }) => Promise<void>
+export interface RazorpayResult {
+  razorpayOrderId: string
+  razorpayPaymentId: string
+  razorpaySignature: string
+}
+
+type Verify = (r: RazorpayResult) => Promise<void>
+
+// A root-mounted <RazorpayCheckout/> host registers this opener. It presents the
+// Razorpay checkout in a WebView (Expo Go can't use the native SDK) and resolves
+// with the gateway result, or rejects if the user cancels / payment fails.
+type Opener = (order: PaymentOrder) => Promise<RazorpayResult>
+let opener: Opener | null = null
+export function setCheckoutOpener(fn: Opener | null) {
+  opener = fn
+}
 
 /**
- * Complete a payment order. The backend is currently in MOCK mode
- * (order.real === false), so we confirm directly with placeholder ids —
- * exactly like the web app does in mock mode.
- *
- * For live payments, add `react-native-razorpay` (a native module, needs an
- * EAS dev build) and open RazorpayCheckout here when order.real is true.
+ * Complete a payment order.
+ * - Mock mode (order.real === false): confirm directly with placeholder ids,
+ *   exactly like the web app does when the backend has no Razorpay keys.
+ * - Real mode (order.real === true): open the Razorpay checkout WebView, then
+ *   verify the returned signature with the backend before it flips to CONFIRMED.
  */
 export async function payOrder(order: PaymentOrder, verify: Verify): Promise<void> {
   if (!order.real) {
     await verify({ razorpayOrderId: order.razorpayOrderId, razorpayPaymentId: 'mock_pay', razorpaySignature: 'mock_sig' })
     return
   }
-  throw new Error('Live card/UPI payments need the Razorpay native module. The backend is in mock mode for now.')
+  if (!opener) throw new Error('Payment screen isn’t ready yet — please try again.')
+  const result = await opener(order)
+  await verify(result)
 }
