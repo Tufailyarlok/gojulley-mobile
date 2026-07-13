@@ -33,7 +33,11 @@ export default function RootLayout() {
           >
             <Stack.Screen name="index" options={{ title: 'GoJulley' }} />
             <Stack.Screen name="search" options={{ title: 'Browse' }} />
+            <Stack.Screen name="trips" options={{ title: 'Trip packages' }} />
+            <Stack.Screen name="trip/[id]" options={{ title: 'Trip' }} />
             <Stack.Screen name="cart" options={{ title: 'Your cart' }} />
+            <Stack.Screen name="bookings" options={{ title: 'My bookings' }} />
+            <Stack.Screen name="explore" options={{ title: 'Explore Ladakh' }} />
             <Stack.Screen name="login" options={{ title: 'Log in' }} />
             <Stack.Screen name="listing/[id]" options={{ title: 'Details' }} />
           </Stack>

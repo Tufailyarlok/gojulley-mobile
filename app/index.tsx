@@ -18,6 +18,13 @@ export default function Home() {
       <Text style={styles.eyebrow}>ONE PLATFORM · EVERYTHING IN ONE PLACE</Text>
       <Text style={styles.h2}>Two ways to plan your trip</Text>
 
+      <Pressable style={styles.card} onPress={() => router.push('/trips')}>
+        <Text style={styles.badge}>Fastest</Text>
+        <Text style={styles.cardTitle}>Book a ready-made package</Text>
+        <Text style={styles.cardBody}>Everything sorted — stays, rides, permits and support, one price and one booking.</Text>
+        <Text style={styles.cta}>Browse packages →</Text>
+      </Pressable>
+
       <Pressable style={styles.card} onPress={() => router.push('/search')}>
         <Text style={[styles.badge, { backgroundColor: '#f0fdfa', color: '#0f766e' }]}>Your way</Text>
         <Text style={styles.cardTitle}>Build your own trip</Text>
@@ -25,12 +32,14 @@ export default function Home() {
         <Text style={styles.cta}>Browse stays, rides &amp; services →</Text>
       </Pressable>
 
-      <Pressable style={styles.card} onPress={() => router.push('/search')}>
-        <Text style={styles.badge}>Popular</Text>
-        <Text style={styles.cardTitle}>Explore the catalogue</Text>
-        <Text style={styles.cardBody}>Hotels, homestays, taxis with drivers, self-drive bikes and add-on services across Ladakh.</Text>
-        <Text style={styles.cta}>Start browsing →</Text>
-      </Pressable>
+      <View style={styles.links}>
+        <Pressable style={styles.linkBtn} onPress={() => router.push('/explore')}>
+          <Text style={styles.linkText}>Explore Ladakh</Text>
+        </Pressable>
+        <Pressable style={styles.linkBtn} onPress={() => router.push('/bookings')}>
+          <Text style={styles.linkText}>My bookings</Text>
+        </Pressable>
+      </View>
     </ScrollView>
   )
 }
@@ -53,4 +62,7 @@ const styles = StyleSheet.create({
   cardTitle: { color: colors.ink, fontWeight: '800', fontSize: 18, marginBottom: sp(1) },
   cardBody: { color: colors.muted, fontSize: 14, lineHeight: 20 },
   cta: { color: colors.navy, fontWeight: '800', marginTop: sp(3) },
+  links: { flexDirection: 'row', gap: sp(3) },
+  linkBtn: { flex: 1, borderWidth: 1, borderColor: colors.line, borderRadius: radius.md, paddingVertical: sp(3.5), alignItems: 'center', backgroundColor: '#fff' },
+  linkText: { color: colors.navy, fontWeight: '800', fontSize: 14 },
 })

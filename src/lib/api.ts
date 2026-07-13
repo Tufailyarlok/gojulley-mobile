@@ -142,3 +142,37 @@ export async function verifyTripPayment(
     await fetch(`${BASE}/trip-payments/verify`, { method: 'POST', headers: authHeaders(token), body: JSON.stringify(data) }),
   )
 }
+
+// --- Book a whole trip package (auth) ---
+export async function createTripBooking(
+  token: string,
+  data: { packageId: number; startDate: string; travelers: number },
+): Promise<TripBooking> {
+  return handle<TripBooking>(
+    await fetch(`${BASE}/trip-bookings`, { method: 'POST', headers: authHeaders(token), body: JSON.stringify(data) }),
+  )
+}
+
+// --- Individual-booking payment (auth) ---
+export async function createPaymentOrder(
+  token: string,
+  bookingId: number,
+  couponCode?: string,
+  deposit = false,
+): Promise<PaymentOrder> {
+  return handle<PaymentOrder>(
+    await fetch(`${BASE}/payments/order`, {
+      method: 'POST',
+      headers: authHeaders(token),
+      body: JSON.stringify({ bookingId, couponCode, deposit }),
+    }),
+  )
+}
+export async function verifyPayment(
+  token: string,
+  data: { razorpayOrderId: string; razorpayPaymentId: string; razorpaySignature: string },
+): Promise<void> {
+  return handleNoBody(
+    await fetch(`${BASE}/payments/verify`, { method: 'POST', headers: authHeaders(token), body: JSON.stringify(data) }),
+  )
+}
