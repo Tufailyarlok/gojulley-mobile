@@ -1,30 +1,53 @@
 import { useState } from 'react'
 import { Alert, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native'
 import { useRouter } from 'expo-router'
+import * as WebBrowser from 'expo-web-browser'
 import { deleteAccount } from '../lib/api'
 import { useAuth } from '../lib/auth'
 import { colors, radius, sp } from '../lib/theme'
+
+// Public site hosting the legal/support pages (same content as the web app).
+// TODO: switch to https://gojulley.com once the domain's DNS is pointed.
+const SITE = 'https://gojulley-frontend.onrender.com'
+const openPage = (path: string) => WebBrowser.openBrowserAsync(SITE + path)
+
+// Legal & support links — must be reachable in-app for store review (privacy
+// especially), signed in or out.
+function LegalLinks() {
+  return (
+    <View style={styles.group}>
+      <Row label="Privacy Policy" sub="How we handle your data" onPress={() => openPage('/privacy')} />
+      <Row label="Terms of Service" sub="The rules of using GoJulley" onPress={() => openPage('/terms')} />
+      <Row label="Support" sub="Get help or contact us" onPress={() => openPage('/support')} last />
+    </View>
+  )
+}
 
 export default function Account() {
   const router = useRouter()
   const { user, logout } = useAuth()
   const [deleting, setDeleting] = useState(false)
 
-  // Signed out — prompt to log in.
+  // Signed out — prompt to log in, but still expose legal & support links.
   if (!user) {
     return (
-      <View style={styles.emptyWrap}>
-        <View style={styles.avatar}>
-          <Text style={styles.avatarGlyph}>👤</Text>
+      <ScrollView contentContainerStyle={{ padding: sp(5), paddingBottom: sp(12) }}>
+        <View style={styles.signedOutTop}>
+          <View style={styles.avatar}>
+            <Text style={styles.avatarGlyph}>👤</Text>
+          </View>
+          <Text style={styles.emptyTitle}>You’re not signed in</Text>
+          <Text style={styles.emptyBody}>
+            Log in to book trips, track your bookings and use offers at checkout.
+          </Text>
+          <Pressable style={[styles.primary, { alignSelf: 'stretch' }]} onPress={() => router.push('/login')}>
+            <Text style={styles.primaryText}>Log in or create account</Text>
+          </Pressable>
         </View>
-        <Text style={styles.emptyTitle}>You’re not signed in</Text>
-        <Text style={styles.emptyBody}>
-          Log in to book trips, track your bookings and use offers at checkout.
-        </Text>
-        <Pressable style={styles.primary} onPress={() => router.push('/login')}>
-          <Text style={styles.primaryText}>Log in or create account</Text>
-        </Pressable>
-      </View>
+
+        <Text style={styles.legalHeading}>Legal &amp; support</Text>
+        <LegalLinks />
+      </ScrollView>
     )
   }
 
@@ -88,6 +111,9 @@ export default function Account() {
         </View>
       </View>
 
+      <Text style={styles.legalHeading}>Legal &amp; support</Text>
+      <LegalLinks />
+
       <Pressable style={styles.logout} onPress={confirmLogout} disabled={deleting}>
         <Text style={styles.logoutText}>Log out</Text>
       </Pressable>
@@ -146,6 +172,8 @@ const styles = StyleSheet.create({
   deleteBtn: { alignItems: 'center', paddingVertical: sp(4), marginTop: sp(1) },
   deleteText: { color: colors.faint, fontWeight: '700', fontSize: 13, textDecorationLine: 'underline' },
 
+  signedOutTop: { alignItems: 'center', marginTop: sp(4), marginBottom: sp(6) },
+  legalHeading: { color: colors.faint, fontSize: 12, fontWeight: '800', marginBottom: sp(2), marginLeft: sp(1) },
   emptyWrap: { flex: 1, alignItems: 'center', justifyContent: 'center', padding: sp(6) },
   emptyTitle: { color: colors.ink, fontWeight: '900', fontSize: 20, marginBottom: sp(2) },
   emptyBody: { color: colors.muted, fontSize: 14, textAlign: 'center', lineHeight: 20, marginBottom: sp(5) },
