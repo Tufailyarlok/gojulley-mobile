@@ -1,8 +1,9 @@
 import { useEffect, useState } from 'react'
-import { ActivityIndicator, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native'
+import { ActivityIndicator, Image, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native'
 import { useRouter } from 'expo-router'
 import { getTrips } from '../lib/api'
 import { inr } from '../lib/money'
+import { tripPhoto } from '../lib/photos'
 import { colors, radius, sp } from '../lib/theme'
 import type { TripPackage } from '../lib/types'
 
@@ -29,15 +30,18 @@ export default function Trips() {
       {!loading &&
         trips.map((t) => (
           <Pressable key={t.id} style={styles.card} onPress={() => router.push(`/trip/${t.id}`)}>
-            <Text style={styles.route}>{t.durationDays} days · {t.route}</Text>
-            <Text style={styles.title}>{t.title}</Text>
-            <Text style={styles.summary} numberOfLines={3}>{t.summary}</Text>
-            <View style={styles.row}>
-              <Text style={styles.price}>
-                {inr(t.pricePerPerson)}
-                <Text style={styles.per}> /person</Text>
-              </Text>
-              <Text style={styles.view}>View trip →</Text>
+            <Image source={{ uri: tripPhoto(t) }} style={styles.cardImg} />
+            <View style={styles.cardBody}>
+              <Text style={styles.route}>{t.durationDays} days · {t.route}</Text>
+              <Text style={styles.title}>{t.title}</Text>
+              <Text style={styles.summary} numberOfLines={3}>{t.summary}</Text>
+              <View style={styles.row}>
+                <Text style={styles.price}>
+                  {inr(t.pricePerPerson)}
+                  <Text style={styles.per}> /person</Text>
+                </Text>
+                <Text style={styles.view}>View trip →</Text>
+              </View>
             </View>
           </Pressable>
         ))}
@@ -48,7 +52,9 @@ export default function Trips() {
 
 const styles = StyleSheet.create({
   intro: { color: colors.muted, fontSize: 14, lineHeight: 20, marginBottom: sp(1) },
-  card: { backgroundColor: '#fff', borderWidth: 1, borderColor: colors.line, borderRadius: radius.lg, padding: sp(4) },
+  card: { backgroundColor: '#fff', borderWidth: 1, borderColor: colors.line, borderRadius: radius.lg, overflow: 'hidden' },
+  cardImg: { width: '100%', height: 150, backgroundColor: colors.surface },
+  cardBody: { padding: sp(4) },
   route: { color: colors.cyan, fontWeight: '800', fontSize: 12, letterSpacing: 0.3 },
   title: { color: colors.ink, fontWeight: '800', fontSize: 17, marginTop: sp(1) },
   summary: { color: colors.muted, fontSize: 13.5, lineHeight: 19, marginTop: sp(2) },

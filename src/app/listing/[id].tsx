@@ -1,9 +1,10 @@
 import { useEffect, useState } from 'react'
-import { ActivityIndicator, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native'
+import { ActivityIndicator, Image, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native'
 import { useLocalSearchParams, useRouter } from 'expo-router'
 import { getListing } from '../../lib/api'
 import { useCart } from '../../lib/cart'
 import { inr } from '../../lib/money'
+import { listingPhoto } from '../../lib/photos'
 import { colors, radius, sp, TYPE_META } from '../../lib/theme'
 import type { Listing } from '../../lib/types'
 
@@ -38,6 +39,7 @@ export default function ListingDetail() {
 
   return (
     <ScrollView contentContainerStyle={{ padding: sp(4), paddingBottom: sp(12) }}>
+      <Image source={{ uri: listingPhoto(listing) }} style={styles.hero} />
       <View style={[styles.badge, { backgroundColor: meta.tint }]}>
         <Text style={{ color: meta.ink, fontWeight: '800', fontSize: 12 }}>{meta.badge}</Text>
       </View>
@@ -81,6 +83,7 @@ export default function ListingDetail() {
 }
 
 const styles = StyleSheet.create({
+  hero: { width: '100%', height: 200, borderRadius: radius.lg, backgroundColor: colors.surface, marginBottom: sp(4) },
   badge: { alignSelf: 'flex-start', borderRadius: radius.pill, paddingHorizontal: 10, paddingVertical: 4, marginBottom: sp(2) },
   loc: { color: colors.faint, fontSize: 13 },
   title: { color: colors.ink, fontWeight: '900', fontSize: 24, marginTop: 2 },

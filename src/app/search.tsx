@@ -1,9 +1,10 @@
 import { useEffect, useMemo, useState } from 'react'
-import { ActivityIndicator, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native'
+import { ActivityIndicator, Image, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native'
 import { useRouter } from 'expo-router'
 import { getListings } from '../lib/api'
 import { useCart } from '../lib/cart'
 import { inr } from '../lib/money'
+import { listingPhoto } from '../lib/photos'
 import { colors, radius, sp, TYPE_META } from '../lib/theme'
 import type { Listing } from '../lib/types'
 
@@ -56,25 +57,26 @@ export default function Search() {
             const meta = TYPE_META[l.type]
             return (
               <Pressable key={l.id} style={styles.card} onPress={() => router.push(`/listing/${l.id}`)}>
-                <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
+                <Image source={{ uri: listingPhoto(l) }} style={styles.cardImg} />
+                {has(l.id) && (
+                  <View style={styles.inCart}>
+                    <Text style={{ color: '#fff', fontWeight: '800', fontSize: 11 }}>✓ In cart</Text>
+                  </View>
+                )}
+                <View style={styles.cardBody}>
                   <View style={[styles.badge, { backgroundColor: meta.tint }]}>
                     <Text style={{ color: meta.ink, fontWeight: '800', fontSize: 12 }}>{meta.badge}</Text>
                   </View>
-                  {has(l.id) && (
-                    <View style={styles.inCart}>
-                      <Text style={{ color: '#fff', fontWeight: '800', fontSize: 11 }}>✓ In cart</Text>
-                    </View>
-                  )}
-                </View>
-                <Text style={styles.title}>{l.title}</Text>
-                <Text style={styles.loc}>{l.location}</Text>
-                <Text style={styles.desc} numberOfLines={2}>{l.description}</Text>
-                <View style={styles.row}>
-                  <Text style={styles.price}>
-                    {inr(l.pricePerDay)}
-                    <Text style={styles.perDay}> /day</Text>
-                  </Text>
-                  <Text style={styles.view}>View →</Text>
+                  <Text style={styles.title}>{l.title}</Text>
+                  <Text style={styles.loc}>{l.location}</Text>
+                  <Text style={styles.desc} numberOfLines={2}>{l.description}</Text>
+                  <View style={styles.row}>
+                    <Text style={styles.price}>
+                      {inr(l.pricePerDay)}
+                      <Text style={styles.perDay}> /day</Text>
+                    </Text>
+                    <Text style={styles.view}>View →</Text>
+                  </View>
                 </View>
               </Pressable>
             )
@@ -90,9 +92,11 @@ const styles = StyleSheet.create({
   pillActive: { backgroundColor: colors.navy, borderColor: colors.navy },
   pillText: { color: colors.muted, fontWeight: '700' },
   pillTextActive: { color: '#fff' },
-  card: { backgroundColor: '#fff', borderWidth: 1, borderColor: colors.line, borderRadius: radius.lg, padding: sp(4) },
+  card: { backgroundColor: '#fff', borderWidth: 1, borderColor: colors.line, borderRadius: radius.lg, overflow: 'hidden' },
+  cardImg: { width: '100%', height: 150, backgroundColor: colors.surface },
+  cardBody: { padding: sp(4) },
   badge: { alignSelf: 'flex-start', borderRadius: radius.pill, paddingHorizontal: 10, paddingVertical: 4 },
-  inCart: { backgroundColor: colors.ok, borderRadius: radius.pill, paddingHorizontal: 10, paddingVertical: 4 },
+  inCart: { position: 'absolute', top: 10, right: 10, backgroundColor: colors.ok, borderRadius: radius.pill, paddingHorizontal: 10, paddingVertical: 4 },
   title: { color: colors.ink, fontWeight: '800', fontSize: 16, marginTop: sp(2) },
   loc: { color: colors.faint, fontSize: 13, marginTop: 2 },
   desc: { color: colors.muted, fontSize: 13.5, marginTop: sp(2), lineHeight: 19 },

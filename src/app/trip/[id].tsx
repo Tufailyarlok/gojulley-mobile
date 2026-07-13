@@ -1,10 +1,11 @@
 import { useEffect, useState } from 'react'
-import { ActivityIndicator, Pressable, ScrollView, StyleSheet, Text, TextInput, View } from 'react-native'
+import { ActivityIndicator, Image, Pressable, ScrollView, StyleSheet, Text, TextInput, View } from 'react-native'
 import { useLocalSearchParams, useRouter } from 'expo-router'
 import { createTripBooking, createTripPaymentOrder, getTrip, verifyTripPayment } from '../../lib/api'
 import { useAuth } from '../../lib/auth'
 import { inr, todayISO } from '../../lib/money'
 import { payOrder } from '../../lib/pay'
+import { tripPhoto } from '../../lib/photos'
 import { colors, radius, sp } from '../../lib/theme'
 import type { TripPackage } from '../../lib/types'
 
@@ -76,6 +77,7 @@ export default function TripDetail() {
 
   return (
     <ScrollView contentContainerStyle={{ padding: sp(4), paddingBottom: sp(12) }}>
+      <Image source={{ uri: tripPhoto(trip) }} style={styles.hero} />
       <Text style={styles.route}>{trip.durationDays} days · {trip.route}</Text>
       <Text style={styles.title}>{trip.title}</Text>
       <Text style={styles.summary}>{trip.summary}</Text>
@@ -163,6 +165,7 @@ export default function TripDetail() {
 }
 
 const styles = StyleSheet.create({
+  hero: { width: '100%', height: 190, borderRadius: radius.lg, backgroundColor: colors.surface, marginBottom: sp(3) },
   route: { color: colors.cyan, fontWeight: '800', fontSize: 12, letterSpacing: 0.3 },
   title: { color: colors.ink, fontWeight: '900', fontSize: 22, marginTop: sp(1) },
   summary: { color: colors.muted, fontSize: 14.5, lineHeight: 21, marginTop: sp(2) },
