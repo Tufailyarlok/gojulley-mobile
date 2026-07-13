@@ -1,8 +1,32 @@
 import { createContext, useContext, useEffect, useState, type ReactNode } from 'react'
+import { Platform } from 'react-native'
 import * as SecureStore from 'expo-secure-store'
 import type { AuthUser } from './types'
 
 const KEY = 'gojulley_auth'
+
+// expo-secure-store is native-only. On web (the browser preview) fall back to
+// localStorage so the app still runs; on a real device we use SecureStore.
+const store = {
+  get(k: string): Promise<string | null> {
+    if (Platform.OS === 'web') return Promise.resolve(globalThis.localStorage?.getItem(k) ?? null)
+    return SecureStore.getItemAsync(k)
+  },
+  set(k: string, v: string): Promise<void> {
+    if (Platform.OS === 'web') {
+      globalThis.localStorage?.setItem(k, v)
+      return Promise.resolve()
+    }
+    return SecureStore.setItemAsync(k, v)
+  },
+  del(k: string): Promise<void> {
+    if (Platform.OS === 'web') {
+      globalThis.localStorage?.removeItem(k)
+      return Promise.resolve()
+    }
+    return SecureStore.deleteItemAsync(k)
+  },
+}
 
 interface AuthCtx {
   user: AuthUser | null
@@ -18,7 +42,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [ready, setReady] = useState(false)
 
   useEffect(() => {
-    SecureStore.getItemAsync(KEY)
+    store
+      .get(KEY)
       .then((raw) => {
         if (raw) {
           try {
@@ -33,11 +58,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   function signIn(u: AuthUser) {
     setUser(u)
-    void SecureStore.setItemAsync(KEY, JSON.stringify(u))
+    void store.set(KEY, JSON.stringify(u))
   }
   function logout() {
     setUser(null)
-    void SecureStore.deleteItemAsync(KEY)
+    void store.del(KEY)
   }
 
   return <Ctx.Provider value={{ user, ready, signIn, logout }}>{children}</Ctx.Provider>
