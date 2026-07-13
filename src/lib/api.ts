@@ -97,6 +97,12 @@ export async function getReviewSummaries(): Promise<ReviewSummary[]> {
   return handle<ReviewSummary[]>(await fetch(`${BASE}/reviews/summary`))
 }
 
+// --- Account (auth) ---
+// Permanently delete the signed-in user and their data (App Store requirement).
+export async function deleteAccount(token: string): Promise<void> {
+  return handleNoBody(await fetch(`${BASE}/users/me`, { method: 'DELETE', headers: authHeaders(token) }))
+}
+
 // --- Coupons (auth) ---
 // Offers to show in the checkout picker.
 export async function getCoupons(token: string): Promise<PublicCoupon[]> {

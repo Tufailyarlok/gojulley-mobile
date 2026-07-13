@@ -1,11 +1,14 @@
+import { useState } from 'react'
 import { Alert, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native'
 import { useRouter } from 'expo-router'
+import { deleteAccount } from '../lib/api'
 import { useAuth } from '../lib/auth'
 import { colors, radius, sp } from '../lib/theme'
 
 export default function Account() {
   const router = useRouter()
   const { user, logout } = useAuth()
+  const [deleting, setDeleting] = useState(false)
 
   // Signed out — prompt to log in.
   if (!user) {
@@ -32,6 +35,28 @@ export default function Account() {
       { text: 'Cancel', style: 'cancel' },
       { text: 'Log out', style: 'destructive', onPress: () => { logout(); router.replace('/') } },
     ])
+
+  async function reallyDelete() {
+    setDeleting(true)
+    try {
+      await deleteAccount(user!.token)
+      logout()
+      router.replace('/')
+    } catch (e) {
+      Alert.alert('Couldn’t delete account', (e as Error).message)
+    } finally {
+      setDeleting(false)
+    }
+  }
+  const confirmDelete = () =>
+    Alert.alert(
+      'Delete account?',
+      'This permanently deletes your account, bookings and reviews. This can’t be undone.',
+      [
+        { text: 'Cancel', style: 'cancel' },
+        { text: 'Delete', style: 'destructive', onPress: reallyDelete },
+      ],
+    )
 
   return (
     <ScrollView contentContainerStyle={{ padding: sp(5), paddingBottom: sp(12) }}>
@@ -63,8 +88,12 @@ export default function Account() {
         </View>
       </View>
 
-      <Pressable style={styles.logout} onPress={confirmLogout}>
+      <Pressable style={styles.logout} onPress={confirmLogout} disabled={deleting}>
         <Text style={styles.logoutText}>Log out</Text>
+      </Pressable>
+
+      <Pressable style={styles.deleteBtn} onPress={confirmDelete} disabled={deleting}>
+        <Text style={styles.deleteText}>{deleting ? 'Deleting…' : 'Delete account'}</Text>
       </Pressable>
     </ScrollView>
   )
@@ -114,6 +143,8 @@ const styles = StyleSheet.create({
     paddingVertical: sp(3.5), alignItems: 'center',
   },
   logoutText: { color: colors.danger, fontWeight: '800', fontSize: 15 },
+  deleteBtn: { alignItems: 'center', paddingVertical: sp(4), marginTop: sp(1) },
+  deleteText: { color: colors.faint, fontWeight: '700', fontSize: 13, textDecorationLine: 'underline' },
 
   emptyWrap: { flex: 1, alignItems: 'center', justifyContent: 'center', padding: sp(6) },
   emptyTitle: { color: colors.ink, fontWeight: '900', fontSize: 20, marginBottom: sp(2) },
