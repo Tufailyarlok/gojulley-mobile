@@ -38,6 +38,13 @@
     ],
     "experiments": {
       "typedRoutes": true
+    },
+    "owner": "tufailyar",
+    "extra": {
+      "router": {},
+      "eas": {
+        "projectId": "85886b05-aaae-48a3-b185-ffa34b7de145"
+      }
     }
   }
 }
