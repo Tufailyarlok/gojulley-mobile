@@ -1,8 +1,8 @@
-import { useState } from 'react'
-import { Alert, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native'
+import { useEffect, useState } from 'react'
+import { ActivityIndicator, Alert, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native'
 import { useRouter } from 'expo-router'
 import * as WebBrowser from 'expo-web-browser'
-import { deleteAccount } from '../lib/api'
+import { deleteAccount, getMe, setTwoFactor } from '../lib/api'
 import { useAuth } from '../lib/auth'
 import { colors, radius, sp } from '../lib/theme'
 
@@ -26,6 +26,28 @@ export default function Account() {
   const router = useRouter()
   const { user, logout } = useAuth()
   const [deleting, setDeleting] = useState(false)
+  const [twoFa, setTwoFa] = useState<boolean | null>(null)
+  const [savingTwoFa, setSavingTwoFa] = useState(false)
+
+  useEffect(() => {
+    if (!user) return
+    getMe(user.token)
+      .then((me) => setTwoFa(me.twoFactorEnabled))
+      .catch(() => setTwoFa(null)) // leave the row hidden if it can't load
+  }, [user])
+
+  async function toggleTwoFa() {
+    if (!user || twoFa === null) return
+    setSavingTwoFa(true)
+    try {
+      const me = await setTwoFactor(user.token, !twoFa)
+      setTwoFa(me.twoFactorEnabled)
+    } catch (e) {
+      Alert.alert('Couldn’t update two-factor login', (e as Error).message)
+    } finally {
+      setSavingTwoFa(false)
+    }
+  }
 
   // Signed out — prompt to log in, but still expose legal & support links.
   if (!user) {
@@ -110,6 +132,24 @@ export default function Account() {
         </View>
       </View>
 
+      {twoFa !== null && (
+        <View style={styles.group}>
+          <Pressable style={styles.row} onPress={toggleTwoFa} disabled={savingTwoFa}>
+            <View style={{ flex: 1 }}>
+              <Text style={styles.rowLabel}>Two-factor login</Text>
+              <Text style={styles.rowSub}>
+                Email a one-time code after your password, so a stolen password isn’t enough on its own.
+              </Text>
+            </View>
+            {savingTwoFa ? (
+              <ActivityIndicator color={colors.navy} />
+            ) : (
+              <Text style={[styles.toggle, twoFa ? styles.toggleOn : styles.toggleOff]}>{twoFa ? 'On' : 'Off'}</Text>
+            )}
+          </Pressable>
+        </View>
+      )}
+
       <Text style={styles.legalHeading}>Legal &amp; support</Text>
       <LegalLinks />
 
@@ -162,6 +202,12 @@ const styles = StyleSheet.create({
   rowLabel: { color: colors.ink, fontWeight: '800', fontSize: 15 },
   rowSub: { color: colors.faint, fontSize: 13, marginTop: 2, lineHeight: 18 },
   chevron: { color: colors.faint, fontSize: 24, fontWeight: '300' },
+  toggle: {
+    fontWeight: '800', fontSize: 13, overflow: 'hidden',
+    borderRadius: radius.pill, paddingHorizontal: 12, paddingVertical: 5,
+  },
+  toggleOn: { color: '#065f46', backgroundColor: '#ecfdf5' },
+  toggleOff: { color: colors.faint, backgroundColor: colors.line },
 
   logout: {
     borderWidth: 1.5, borderColor: colors.danger, borderRadius: radius.md,
