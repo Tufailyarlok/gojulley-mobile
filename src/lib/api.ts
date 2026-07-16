@@ -3,6 +3,8 @@ import type {
   Booking,
   CouponPreview,
   Listing,
+  LoginResponse,
+  Me,
   PaymentOrder,
   PublicCoupon,
   ReviewSummary,
@@ -40,43 +42,55 @@ async function handleNoBody(res: Response): Promise<void> {
 }
 
 // --- Auth ---
-export async function login(email: string, password: string): Promise<AuthUser> {
-  return handle<AuthUser>(
-    await fetch(`${BASE}/auth/login`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ email, password }),
-    }),
+const jsonHeaders = { 'Content-Type': 'application/json' }
+
+export async function login(email: string, password: string): Promise<LoginResponse> {
+  return handle<LoginResponse>(
+    await fetch(`${BASE}/auth/login`, { method: 'POST', headers: jsonHeaders, body: JSON.stringify({ email, password }) }),
   )
 }
 
 export async function signup(email: string, password: string, name: string): Promise<SignupResponse> {
   return handle<SignupResponse>(
-    await fetch(`${BASE}/auth/signup`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ email, password, name }),
-    }),
+    await fetch(`${BASE}/auth/signup`, { method: 'POST', headers: jsonHeaders, body: JSON.stringify({ email, password, name }) }),
   )
 }
 
 export async function verifyOtp(email: string, code: string): Promise<AuthUser> {
   return handle<AuthUser>(
-    await fetch(`${BASE}/auth/verify`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ email, code }),
-    }),
+    await fetch(`${BASE}/auth/verify-otp`, { method: 'POST', headers: jsonHeaders, body: JSON.stringify({ email, code }) }),
   )
 }
 
 export async function resendOtp(email: string): Promise<SignupResponse> {
   return handle<SignupResponse>(
-    await fetch(`${BASE}/auth/resend`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ email }),
-    }),
+    await fetch(`${BASE}/auth/resend-otp`, { method: 'POST', headers: jsonHeaders, body: JSON.stringify({ email }) }),
+  )
+}
+
+// Passwordless login + 2FA second factor share the same LOGIN code + verify.
+export async function requestLoginOtp(email: string): Promise<SignupResponse> {
+  return handle<SignupResponse>(
+    await fetch(`${BASE}/auth/login-otp/request`, { method: 'POST', headers: jsonHeaders, body: JSON.stringify({ email }) }),
+  )
+}
+
+export async function verifyLoginOtp(email: string, code: string): Promise<AuthUser> {
+  return handle<AuthUser>(
+    await fetch(`${BASE}/auth/login-otp/verify`, { method: 'POST', headers: jsonHeaders, body: JSON.stringify({ email, code }) }),
+  )
+}
+
+// Forgot / reset password.
+export async function forgotPassword(email: string): Promise<SignupResponse> {
+  return handle<SignupResponse>(
+    await fetch(`${BASE}/auth/forgot-password`, { method: 'POST', headers: jsonHeaders, body: JSON.stringify({ email }) }),
+  )
+}
+
+export async function resetPassword(email: string, code: string, newPassword: string): Promise<AuthUser> {
+  return handle<AuthUser>(
+    await fetch(`${BASE}/auth/reset-password`, { method: 'POST', headers: jsonHeaders, body: JSON.stringify({ email, code, newPassword }) }),
   )
 }
 
@@ -98,6 +112,18 @@ export async function getReviewSummaries(): Promise<ReviewSummary[]> {
 }
 
 // --- Account (auth) ---
+// The signed-in user's profile (incl. whether 2FA is on).
+export async function getMe(token: string): Promise<Me> {
+  return handle<Me>(await fetch(`${BASE}/users/me`, { headers: authHeaders(token) }))
+}
+
+// Turn email-OTP two-factor login on or off.
+export async function setTwoFactor(token: string, enabled: boolean): Promise<Me> {
+  return handle<Me>(
+    await fetch(`${BASE}/users/me/2fa`, { method: 'PUT', headers: authHeaders(token), body: JSON.stringify({ enabled }) }),
+  )
+}
+
 // Permanently delete the signed-in user and their data (App Store requirement).
 export async function deleteAccount(token: string): Promise<void> {
   return handleNoBody(await fetch(`${BASE}/users/me`, { method: 'DELETE', headers: authHeaders(token) }))

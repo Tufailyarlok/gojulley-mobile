@@ -99,7 +99,26 @@ export interface AuthUser {
   role: 'CUSTOMER' | 'ADMIN'
 }
 
+// Login returns either a completed session (token present) or a 2FA challenge
+// (token null, twoFactorRequired true), completed via verifyLoginOtp.
+export interface LoginResponse {
+  token: string | null
+  email: string
+  name: string | null
+  role: 'CUSTOMER' | 'ADMIN' | null
+  twoFactorRequired: boolean
+}
+
 export interface SignupResponse {
   email: string
   message: string
+}
+
+// Signed-in user's profile (for the account screen / 2FA toggle).
+export interface Me {
+  email: string
+  name: string
+  role: 'CUSTOMER' | 'ADMIN'
+  verified: boolean
+  twoFactorEnabled: boolean
 }
